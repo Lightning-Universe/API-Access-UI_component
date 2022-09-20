@@ -1,0 +1,15 @@
+include *.py
+include *.txt
+exclude *.yaml
+exclude *.toml
+exclude *.coveragerc
+exclude *.json
+
+recursive-include lightning_api_access *
+
+recursive-exclude examples *
+recursive-exclude docs *
+recursive-exclude tests *.py
+recursive-exclude tests *.feature
+recursive-exclude * *.pyc
+recursive-exclude * *.json
