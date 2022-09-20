@@ -1,1 +1,1 @@
-{"apis": [{"url": "127.0.0.1:50892/get_image", "method": "GET", "request": null, "response": "{image: '...', status: '...'}"}]}
+{"apis": [{"url": "127.0.0.1:57148/get_image", "method": "GET", "request": null, "response": "{image: '...', status: '...'}"}]}

@@ -23,12 +23,15 @@ class APIAccessFrontend(StaticWebFrontend):
     """
 
     def __init__(self, apis: Dict[str, Any]) -> None:
-        ui_dir = os.path.join(os.path.dirname(__file__), "ui", "build")
-
+        ui_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ui", "build")
         super().__init__(ui_dir)
 
         # Write API metadata to a JSON file
         # Note: This will deliberately be performed each time the `APIAccessFrontend` so that the metadata can change dynamically without issues
-        metadata_file = os.path.join(ui_dir, "api_metadata.json")
-        with open(metadata_file, 'w') as f:
+        self.metadata_file = os.path.join(ui_dir, "api_metadata.json")
+        with open(self.metadata_file, 'w') as f:
             json.dump({"apis": apis}, f)
+
+    def stop_server(self) -> None:
+        os.remove(self.metadata_file)
+        return super().stop_server()

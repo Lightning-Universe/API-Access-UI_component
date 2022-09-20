@@ -36,6 +36,7 @@ setup(
     author_email="ethan@lightning.ai",
     url="https://github.com/Lightning-AI/LAI-API-Access-UI-Component",
     packages=find_packages(exclude=["tests", "docs"]),
+    include_package_data=True,
     keywords=["lightning"],
     python_requires=">=3.7",
     setup_requires=["wheel"],
