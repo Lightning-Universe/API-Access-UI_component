@@ -26,7 +26,7 @@ class ExampleApp(L.LightningFlow):
 
     def configure_layout(self):
         return APIAccessFrontend(apis=[{
-            "url": f"{self.serve_work.host}:{self.serve_work.port}/get_image",
+            "url": f"{self.serve_work.url}/get_image",
             "method": "GET",
             "request": None,
             "response": "{image: '...', status: '...'}",
