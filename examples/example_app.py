@@ -34,7 +34,14 @@ class ExampleApp(L.LightningFlow):
                     "request": None,
                     "response": json.dumps({"image": "...", "status": "..."}, indent=2),
                     "input_query": "required_string",
-                }
+                },
+                {
+                    "url": f"{self.serve_work.url}/list_images",
+                    "method": "GET",
+                    "request": None,
+                    "response": [{"image": "...", "status": "..."}, {"image": "...", "status": "..."}],
+                    "input_query": "optional_string",
+                },
             ]
         )
 
