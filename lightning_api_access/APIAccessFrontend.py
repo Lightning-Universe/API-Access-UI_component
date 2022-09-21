@@ -16,6 +16,7 @@ class APIAccessFrontend(StaticWebFrontend):
 
             def configure_layout(self):
                 return APIAccessFrontend(apis=[{
+					"name":"string",
                     "url": "endpoint_url",
                     "method": "POST|PUT|GET",
                     "request": "Example request JSON",
