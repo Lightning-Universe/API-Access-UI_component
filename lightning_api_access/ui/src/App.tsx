@@ -1,17 +1,15 @@
 import axios from "axios";
 import {
   Box,
-  Button,
   Container,
   Divider,
   SnackbarProvider,
   Stack,
-  TextField,
   Typography,
   useSnackbar,
 } from "lightning-ui/src/design-system/components";
 import ThemeProvider from "lightning-ui/src/design-system/theme";
-import React, { useState } from "react";
+import React, { useLayoutEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 
@@ -21,28 +19,35 @@ type APIEndpoint = Partial<{
   url: string;
   method: "GET";
   request: any;
-  response: Partial<{
-    content: string;
-    text: string;
-    status: number;
-  }>;
+  response: string;
+  input_query: string;
 }>;
 
 function Main() {
-  const [apiMetadata, setApiMetadata] = React.useState<APIEndpoint>({
-    response: {
-      content: "https://avatars.githubusercontent.com/u/58386951?s=200&v=4",
-      status: 200,
+  const [apiMetadata, setApiMetadata] = React.useState<APIEndpoint[]>([
+    {
+      method: "GET",
+      url: "https://lightning.ai/work-api/",
+      response: JSON.stringify(
+        {
+          content: "https://avatars.githubusercontent.com/u/58386951",
+          status: 200,
+        },
+        null,
+        2
+      ),
     },
-  });
+  ]);
+
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     const update = () => {
       axios
-        .get(`${window.location.origin}/api_metadata.json`)
+        .get(`${"http://localhost:59033"}/api_metadata.json`)
         .then(({ data }) => {
           setApiMetadata(data.apis);
+          console.log(data.apis);
         })
         .catch((error) => {
           enqueueSnackbar({
@@ -70,7 +75,9 @@ function Main() {
       height={"inherit"}
     >
       {/* {JSON.stringify(apiMetadata)} */}
-      <RenderApiEndpoint {...apiMetadata} />
+      {apiMetadata.map((e) => (
+        <RenderApiEndpoint {...e} key={e.url} />
+      ))}
     </Box>
   );
 }
@@ -92,54 +99,12 @@ function App() {
 export default App;
 
 const RenderApiEndpoint = (props: APIEndpoint) => {
-  const [inputText, onChangeInputText] = useState<string | null>("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onSubmit = async () => {
-    if (!(props.url && props.method && inputText)) return;
-
-    setIsLoading(true);
-
-    try {
-      await axios.request({
-        method: props.method,
-        url: props.url,
-        params: {
-          inputText,
-        },
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const renderResponse = () => {
-    switch (true) {
-      case !!props.response?.text:
-        return (
-          <Box paddingY={1}>
-            <Typography>Response</Typography>
-            <Divider />
-            <Typography>{props.response?.text}</Typography>
-          </Box>
-        );
-      case !!props.response?.content:
-        return (
-          <Box textAlign={"center"} paddingY={1}>
-            <Typography textAlign={"left"}>Response</Typography>
-            <Divider />
-            <img
-              src={props.response?.content}
-              alt={inputText || "response-image"}
-            />
-          </Box>
-        );
-      default:
-        return null;
-    }
-  };
+  useLayoutEffect(() => {
+    // @ts-ignore
+    if (window.hljs) window.hljs.highlightAll();
+  }, []);
   return (
-    <Container maxWidth={"sm"}>
+    <Container maxWidth={"md"}>
       <Stack minWidth={"300px"}>
         <Typography>This is an API endpoint for ...</Typography>
         <Box height={20} />
@@ -147,27 +112,34 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
           sx={(theme) => ({
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 1.5,
-            padding: 2,
+            padding: 1,
           })}
         >
-          <Typography>Try it here</Typography>
-          <Box height={16} />
-          <TextField
-            placeholder="Some placeholder"
-            value={inputText}
-            onChange={onChangeInputText}
-            fullWidth
-          />
-          <Box height={12} />
-          <Button
-            text="Submit"
-            disabled={!inputText || !props.url}
-            onClick={onSubmit}
-            loading={isLoading}
-          />
-        </Box>
+          <Typography>Request</Typography>
+          <Divider />
+          <pre>
+            <code className="language-python">
+              {`import requests
 
-        {renderResponse()}
+requests.get("${props.url}", params={"${props.input_query}":"required_value"})
+`}
+            </code>
+          </pre>
+        </Box>
+        <Box height={16} />
+        <Box
+          sx={(theme) => ({
+            border: `1px solid ${theme.palette.primary.main}`,
+            borderRadius: 1.5,
+            padding: 1,
+          })}
+        >
+          <Typography>Response</Typography>
+          <Divider />
+          <pre>
+            <code className="language-json">{props.response}</code>
+          </pre>
+        </Box>
       </Stack>
     </Container>
   );

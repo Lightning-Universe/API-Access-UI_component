@@ -28,3 +28,7 @@ body,
   height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
   height: fill-available;
 }
+
+pre {
+  white-space: break-spaces;
+}
