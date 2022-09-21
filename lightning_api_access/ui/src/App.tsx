@@ -1,13 +1,5 @@
 import axios from "axios";
-import {
-  Box,
-  Container,
-  Divider,
-  SnackbarProvider,
-  Stack,
-  Typography,
-  useSnackbar,
-} from "lightning-ui/src/design-system/components";
+import { Box, Container, Divider, SnackbarProvider, Stack, Typography, useSnackbar } from "lightning-ui/src/design-system/components";
 import ThemeProvider from "lightning-ui/src/design-system/theme";
 import React, { useLayoutEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -19,43 +11,27 @@ type APIEndpoint = Partial<{
   url: string;
   method: "GET";
   request: any;
-  response: string;
+  response: object;
   input_query: string;
 }>;
 
 function Main() {
-  const [apiMetadata, setApiMetadata] = React.useState<APIEndpoint[]>([
-    {
-      method: "GET",
-      url: "https://lightning.ai/work-api/",
-      response: JSON.stringify(
-        {
-          content: "https://avatars.githubusercontent.com/u/58386951",
-          status: 200,
-        },
-        null,
-        2
-      ),
-    },
-  ]);
+  const [apiMetadata, setApiMetadata] = React.useState<APIEndpoint[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
-    const update = () => {
-      axios
-        .get(`${"http://localhost:59033"}/api_metadata.json`)
-        .then(({ data }) => {
-          setApiMetadata(data.apis);
-          console.log(data.apis);
-        })
-        .catch((error) => {
-          enqueueSnackbar({
-            title: "Error Fetching Data",
-            children: "Try reloading the page",
-            severity: "error",
-          });
+    const update = async () => {
+      try {
+        const { data } = await axios.get<{ apis: APIEndpoint[] }>(`${window.location.origin}/api_metadata.json`);
+        setApiMetadata(data.apis);
+      } catch (error) {
+        enqueueSnackbar({
+          title: "Error Fetching Data",
+          children: "Try reloading the page",
+          severity: "error",
         });
+      }
     };
 
     update();
@@ -68,13 +44,7 @@ function Main() {
   }, [enqueueSnackbar]);
 
   return (
-    <Box
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      height={"inherit"}
-    >
-      {/* {JSON.stringify(apiMetadata)} */}
+    <Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"inherit"}>
       {apiMetadata.map((e) => (
         <RenderApiEndpoint {...e} key={e.url} />
       ))}
@@ -113,8 +83,7 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 1.5,
             padding: 1,
-          })}
-        >
+          })}>
           <Typography>Request</Typography>
           <Divider />
           <pre>
@@ -132,12 +101,13 @@ requests.get("${props.url}", params={"${props.input_query}":"required_value"})
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 1.5,
             padding: 1,
-          })}
-        >
+          })}>
           <Typography>Response</Typography>
           <Divider />
           <pre>
-            <code className="language-json">{props.response}</code>
+            <code className="language-json">
+              {typeof props.response === "string" ? props.response : JSON.stringify(props.response, null, 2)}
+            </code>
           </pre>
         </Box>
       </Stack>
