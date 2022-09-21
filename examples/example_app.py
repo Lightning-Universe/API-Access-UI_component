@@ -1,6 +1,7 @@
-from xml.etree.ElementTree import TreeBuilder
-import lightning as L
+import json
 import time
+
+import lightning as L
 
 from lightning_api_access import APIAccessFrontend
 
@@ -25,12 +26,17 @@ class ExampleApp(L.LightningFlow):
         self.serve_work.run()
 
     def configure_layout(self):
-        return APIAccessFrontend(apis=[{
-            "url": f"{self.serve_work.url}/get_image",
-            "method": "GET",
-            "request": None,
-            "response": "{image: '...', status: '...'}",
-        }])
+        return APIAccessFrontend(
+            apis=[
+                {
+                    "url": f"{self.serve_work.url}/get_image",
+                    "method": "GET",
+                    "request": None,
+                    "response": json.dumps({"image": "...", "status": "..."}, indent=2),
+                    "input_query": "required_string",
+                }
+            ]
+        )
 
 
 app = L.LightningApp(ExampleApp())

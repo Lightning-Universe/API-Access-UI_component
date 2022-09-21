@@ -1,12 +1,13 @@
-import os
 import json
+import os
 from typing import Any, Dict
+
 from lightning.app.frontend import StaticWebFrontend
 
 
 class APIAccessFrontend(StaticWebFrontend):
     """The APIAccessFrontend enables you to give users a guide for interacting with your app via an API.
-        
+
     Example:
 
         In your LightningFlow, override the method `configure_layout`:
@@ -16,7 +17,7 @@ class APIAccessFrontend(StaticWebFrontend):
             def configure_layout(self):
                 return APIAccessFrontend(apis=[{
                     "url": "endpoint_url",
-                    "method": "POST|PUT|GET",
+                    "method": "GET",
                     "request": "Example request JSON",
                     "response": "Example response JSON",
                 }])
@@ -29,7 +30,7 @@ class APIAccessFrontend(StaticWebFrontend):
         # Write API metadata to a JSON file
         # Note: This will deliberately be performed each time the `APIAccessFrontend` so that the metadata can change dynamically without issues
         self.metadata_file = os.path.join(ui_dir, "api_metadata.json")
-        with open(self.metadata_file, 'w') as f:
+        with open(self.metadata_file, "w") as f:
             json.dump({"apis": apis}, f)
 
     def stop_server(self) -> None:
