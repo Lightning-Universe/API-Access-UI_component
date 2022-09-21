@@ -1,4 +1,5 @@
 import { CopyAllRounded } from "@mui/icons-material";
+import axios from "axios";
 import {
   Box,
   Container,
@@ -34,36 +35,9 @@ function Main() {
   React.useEffect(() => {
     const update = async () => {
       try {
-        // const { data } = await axios.get<{ apis: APIEndpoint[] }>(`${window.location.origin}/api_metadata.json`);
-        const data: { apis: APIEndpoint[] } = {
-          apis: [
-            {
-              name: "get image by id",
-              url: "/get_image",
-              method: "GET",
-              request: { id: "string" },
-              response:
-                '{\n  "id": "...",\n  "image": "...",\n  "status": "..."\n}',
-            },
-            {
-              name: "list images",
-              url: "/list_images",
-              method: "GET",
-              request: { size: "number" },
-              response: [
-                { image: "...", status: "..." },
-                { image: "...", status: "..." },
-              ],
-            },
-            {
-              name: "resize image",
-              url: "/resize",
-              method: "POST",
-              request: { size: "number" },
-              response: { image: "...", status: "..." },
-            },
-          ],
-        };
+        const { data } = await axios.get<{ apis: APIEndpoint[] }>(
+          `${window.location.origin}/api_metadata.json`
+        );
         setApiMetadata(data.apis);
       } catch (error) {
         enqueueSnackbar({
