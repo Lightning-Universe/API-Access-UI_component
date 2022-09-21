@@ -1,9 +1,20 @@
+import { CopyAllRounded } from "@mui/icons-material";
 import axios from "axios";
-import { Box, Container, Divider, SnackbarProvider, Stack, Typography, useSnackbar } from "lightning-ui/src/design-system/components";
+import {
+  Box,
+  Container,
+  Divider,
+  IconButton,
+  SnackbarProvider,
+  Stack,
+  Typography,
+  useSnackbar,
+} from "lightning-ui/src/design-system/components";
 import ThemeProvider from "lightning-ui/src/design-system/theme";
 import React, { useLayoutEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
+import { useClipboard } from "utils";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +55,7 @@ function Main() {
   }, [enqueueSnackbar]);
 
   return (
-    <Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"inherit"}>
+    <Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"inherit"} flexDirection={"column"} gap={3}>
       {apiMetadata.map((e) => (
         <RenderApiEndpoint {...e} key={e.url} />
       ))}
@@ -73,6 +84,9 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
     // @ts-ignore
     if (window.hljs) window.hljs.highlightAll();
   }, []);
+
+  const codeSnippet = getCodeSnippet(props);
+  const copyToClipboard = useClipboard();
   return (
     <Container maxWidth={"md"}>
       <Stack minWidth={"300px"}>
@@ -84,15 +98,15 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
             borderRadius: 1.5,
             padding: 1,
           })}>
-          <Typography>Request</Typography>
+          <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+            <Typography>Request</Typography>
+            <IconButton edge={"end"} onClick={() => copyToClipboard(codeSnippet)}>
+              <CopyAllRounded />
+            </IconButton>
+          </Stack>
           <Divider />
           <pre>
-            <code className="language-python">
-              {`import requests
-
-requests.get("${props.url}", params={"${props.input_query}":"required_value"})
-`}
-            </code>
+            <code className="language-python">{codeSnippet}</code>
           </pre>
         </Box>
         <Box height={16} />
@@ -113,4 +127,10 @@ requests.get("${props.url}", params={"${props.input_query}":"required_value"})
       </Stack>
     </Container>
   );
+};
+
+const getCodeSnippet = (props: APIEndpoint, language: "python" = "python") => {
+  return `import requests
+requests.get("${props.url}", params={"${props.input_query}":"required_value"})
+`;
 };
