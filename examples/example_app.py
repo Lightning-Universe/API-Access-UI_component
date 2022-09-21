@@ -29,12 +29,26 @@ class ExampleApp(L.LightningFlow):
         return APIAccessFrontend(
             apis=[
                 {
+                    "name": "get image by id",
                     "url": f"{self.serve_work.url}/get_image",
                     "method": "GET",
-                    "request": None,
-                    "response": json.dumps({"image": "...", "status": "..."}, indent=2),
-                    "input_query": "required_string",
-                }
+                    "request": {"id": "string"},
+                    "response": json.dumps({"id": "...", "image": "...", "status": "..."}, indent=2),
+                },
+                {
+                    "name": "list images",
+                    "url": f"{self.serve_work.url}/list_images",
+                    "method": "GET",
+                    "request": {"size": "number"},
+                    "response": [{"image": "...", "status": "..."}, {"image": "...", "status": "..."}],
+                },
+                {
+                    "name": "resize image",
+                    "url": "/resize",
+                    "method": "POST",
+                    "request": {"size": "number"},
+                    "response": {"image": "...", "status": "..."},
+                },
             ]
         )
 

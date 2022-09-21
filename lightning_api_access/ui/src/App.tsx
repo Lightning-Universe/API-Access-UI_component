@@ -19,10 +19,11 @@ import { useClipboard } from "utils";
 const queryClient = new QueryClient();
 
 type APIEndpoint = Partial<{
+  name: string;
   url: string;
-  method: "GET";
+  method: "GET" | "POST" | "PUT";
   request: any;
-  response: object;
+  response: object | string;
   input_query: string;
 }>;
 
@@ -34,7 +35,9 @@ function Main() {
   React.useEffect(() => {
     const update = async () => {
       try {
-        const { data } = await axios.get<{ apis: APIEndpoint[] }>(`${window.location.origin}/api_metadata.json`);
+        const { data } = await axios.get<{ apis: APIEndpoint[] }>(
+          `${window.location.origin}/api_metadata.json`
+        );
         setApiMetadata(data.apis);
       } catch (error) {
         enqueueSnackbar({
@@ -55,7 +58,14 @@ function Main() {
   }, [enqueueSnackbar]);
 
   return (
-    <Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"inherit"} flexDirection={"column"} gap={3}>
+    <Box
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      flexDirection={"column"}
+      gap={3}
+      paddingY={4}
+    >
       {apiMetadata.map((e) => (
         <RenderApiEndpoint {...e} key={e.url} />
       ))}
@@ -90,17 +100,25 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
   return (
     <Container maxWidth={"md"}>
       <Stack minWidth={"300px"}>
-        <Typography>This is an API endpoint for ...</Typography>
+        <Typography>This is an API endpoint to {props.name}</Typography>
         <Box height={20} />
         <Box
           sx={(theme) => ({
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 1.5,
             padding: 1,
-          })}>
-          <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+          })}
+        >
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
             <Typography>Request</Typography>
-            <IconButton edge={"end"} onClick={() => copyToClipboard(codeSnippet)}>
+            <IconButton
+              edge={"end"}
+              onClick={() => copyToClipboard(codeSnippet)}
+            >
               <CopyAllRounded />
             </IconButton>
           </Stack>
@@ -115,12 +133,13 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
             border: `1px solid ${theme.palette.primary.main}`,
             borderRadius: 1.5,
             padding: 1,
-          })}>
+          })}
+        >
           <Typography>Response</Typography>
           <Divider />
           <pre>
             <code className="language-json">
-              {typeof props.response === "string" ? props.response : JSON.stringify(props.response, null, 2)}
+              {renderStringOrObject(props.response)}
             </code>
           </pre>
         </Box>
@@ -130,7 +149,22 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
 };
 
 const getCodeSnippet = (props: APIEndpoint, language: "python" = "python") => {
+  if (props.method === "POST") {
+    return `import requests
+requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+`;
+  }
+
+  if (props.method === "PUT") {
+    return `import requests
+requests.put("${props.url}", json=${renderStringOrObject(props.request)})
+`;
+  }
+
   return `import requests
-requests.get("${props.url}", params={"${props.input_query}":"required_value"})
+requests.get("${props.url}", ${renderStringOrObject(props.request)})
 `;
 };
+
+const renderStringOrObject = (data: object | string = "") =>
+  typeof data === "string" ? data : JSON.stringify(data, null, 2);
