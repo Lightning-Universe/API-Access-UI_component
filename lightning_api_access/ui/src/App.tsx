@@ -1,4 +1,5 @@
 import { CopyAllRounded } from "@mui/icons-material";
+import axios from "axios";
 import {
   Box,
   Container,
@@ -41,21 +42,9 @@ function Main() {
   React.useEffect(() => {
     const update = async () => {
       try {
-        // const { data } = await axios.get<APIComponentResponse>(
-        //   `${window.location.origin}/api_metadata.json`
-        // );
-        const data: { title: string; apis: APIEndpoint[] } = {
-          title: "Work Title",
-          apis: [
-            {
-              name: "predict image",
-              url: "http://litwork.com/predict",
-              method: "GET",
-              request: { size: "number" },
-              response: [{ image: "...", status: "..." }],
-            },
-          ],
-        };
+        const { data } = await axios.get<APIComponentResponse>(
+          `${window.location.origin}/api_metadata.json`
+        );
         setApiMetadata(data);
       } catch (error) {
         enqueueSnackbar({
@@ -262,7 +251,7 @@ const SectionHeader = (props: { onClick?: () => void; title: string }) => {
         <Typography fontWeight={"700"}>{props.title}</Typography>
 
         {!!props.onClick && (
-          <IconButton edge={"end"} onClick={props.onClick}>
+          <IconButton onClick={props.onClick}>
             <CopyAllRounded />
           </IconButton>
         )}
