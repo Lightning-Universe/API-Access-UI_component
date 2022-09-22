@@ -32,3 +32,6 @@ body,
 pre {
   white-space: break-spaces;
 }
+code {
+  border-radius: 8px;
+}

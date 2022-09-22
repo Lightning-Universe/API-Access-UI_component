@@ -5,13 +5,14 @@ import {
   Container,
   Divider,
   IconButton,
+  Select,
   SnackbarProvider,
   Stack,
   Typography,
   useSnackbar,
 } from "lightning-ui/src/design-system/components";
 import ThemeProvider from "lightning-ui/src/design-system/theme";
-import React, { useLayoutEffect } from "react";
+import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { useClipboard } from "utils";
@@ -27,18 +28,24 @@ type APIEndpoint = Partial<{
   input_query: string;
 }>;
 
+enum Languages {
+  python = "Python Example",
+  javascript = "Javascript Example",
+}
+
+type APIComponentResponse = Partial<{ title: string; apis: APIEndpoint[] }>;
 function Main() {
-  const [apiMetadata, setApiMetadata] = React.useState<APIEndpoint[]>([]);
+  const [response, setApiMetadata] = React.useState<APIComponentResponse>({});
 
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     const update = async () => {
       try {
-        const { data } = await axios.get<{ apis: APIEndpoint[] }>(
+        const { data } = await axios.get<APIComponentResponse>(
           `${window.location.origin}/api_metadata.json`
         );
-        setApiMetadata(data.apis);
+        setApiMetadata(data);
       } catch (error) {
         enqueueSnackbar({
           title: "Error Fetching Data",
@@ -66,7 +73,8 @@ function Main() {
       gap={3}
       paddingY={4}
     >
-      {apiMetadata.map((e) => (
+      <Typography fontSize={24}>{response.title}</Typography>
+      {response.apis?.map((e) => (
         <RenderApiEndpoint {...e} key={e.url} />
       ))}
     </Box>
@@ -90,65 +98,114 @@ function App() {
 export default App;
 
 const RenderApiEndpoint = (props: APIEndpoint) => {
-  useLayoutEffect(() => {
-    // @ts-ignore
-    if (window.hljs) window.hljs.highlightAll();
-  }, []);
+  const [language, setLanguage] = useState<Languages>(Languages.python);
 
-  const codeSnippet = getCodeSnippet(props);
+  React.useEffect(() => {
+    const a = setTimeout(() => {
+      // @ts-ignore
+      if (window.hljs) window.hljs.highlightAll();
+    }, 50);
+
+    return () => {
+      clearTimeout(a);
+    };
+  }, [language]);
+
   const copyToClipboard = useClipboard();
+  const codeSnippet = getCodeSnippet(props, language);
+  const sampleResponse = renderStringOrObject(props.response);
   return (
     <Container maxWidth={"md"}>
       <Stack minWidth={"300px"}>
-        <Typography>This is an API endpoint to {props.name}</Typography>
         <Box height={20} />
+        <Stack direction={"row"} gap={1} alignItems={"center"}>
+          <Typography
+            sx={(theme) => ({
+              backgroundColor: theme.palette.primary[50],
+              padding: "2px 4px",
+              borderRadius: "8px",
+              color: "#fff",
+            })}
+          >
+            {props.method}
+          </Typography>
+          <Typography>Use this to {props.name}</Typography>
+        </Stack>
+        <Box height={8} />
         <Box
-          sx={(theme) => ({
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderRadius: 1.5,
-            padding: 1,
-          })}
+          sx={{
+            border: "2px solid #e3e3e3",
+            borderRadius: 2,
+            padding: "8px 12px",
+          }}
         >
+          <Typography>{props.url}</Typography>
+        </Box>
+        <Box height={8} />
+
+        <Section>
           <Stack
             direction={"row"}
             justifyContent={"space-between"}
             alignItems={"center"}
+            sx={{
+              ".MuiFormControl-root": {
+                bottom: "2px",
+              },
+            }}
           >
-            <Typography>Request</Typography>
-            <IconButton
-              edge={"end"}
-              onClick={() => copyToClipboard(codeSnippet)}
-            >
+            <Select
+              value={language}
+              options={[
+                { value: Languages.python, label: Languages.python },
+                { value: Languages.javascript, label: Languages.javascript },
+              ]}
+              onChange={(e) => e && setLanguage(e as Languages)}
+            />
+            <IconButton onClick={() => copyToClipboard(codeSnippet)}>
               <CopyAllRounded />
             </IconButton>
           </Stack>
           <Divider />
+
           <pre>
-            <code className="language-python">{codeSnippet}</code>
-          </pre>
-        </Box>
-        <Box height={16} />
-        <Box
-          sx={(theme) => ({
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderRadius: 1.5,
-            padding: 1,
-          })}
-        >
-          <Typography>Response</Typography>
-          <Divider />
-          <pre>
-            <code className="language-json">
-              {renderStringOrObject(props.response)}
+            <code
+              className={`language-${language.split(" ")[0].toLowerCase()}`}
+            >
+              {codeSnippet}
             </code>
           </pre>
-        </Box>
+        </Section>
+
+        <Box height={16} />
+        <Section>
+          <SectionHeader
+            title={"Sample Response"}
+            onClick={() => copyToClipboard(sampleResponse)}
+          />
+          <pre>
+            <code className="language-json">{sampleResponse}</code>
+          </pre>
+        </Section>
       </Stack>
     </Container>
   );
 };
 
-const getCodeSnippet = (props: APIEndpoint, language: "python" = "python") => {
+const getCodeSnippet = (
+  props: APIEndpoint,
+  language: Languages = Languages.python
+) => {
+  if (language === Languages.javascript)
+    return `fetch("${props.url}", { body: ${renderStringOrObject(
+      props.request
+    )} })
+.then(res=>res.json())
+.then(data=>{
+  console.log(data);
+  // start building cool stuff with data
+})`;
+
   if (props.method === "POST") {
     return `import requests
 requests.post("${props.url}", json=${renderStringOrObject(props.request)})
@@ -166,5 +223,40 @@ requests.get("${props.url}", ${renderStringOrObject(props.request)})
 `;
 };
 
-const renderStringOrObject = (data: object | string = "") =>
-  typeof data === "string" ? data : JSON.stringify(data, null, 2);
+const renderStringOrObject = (data: object | string = "", indentation = 2) =>
+  typeof data === "string" ? data : JSON.stringify(data, null, indentation);
+
+const Section = (props: { children: React.ReactNode }) => {
+  return (
+    <Box
+      sx={(theme) => ({
+        borderRadius: 1.5,
+        padding: 1,
+        backgroundColor: "#e3e3e3",
+      })}
+    >
+      {props.children}
+    </Box>
+  );
+};
+
+const SectionHeader = (props: { onClick?: () => void; title: string }) => {
+  return (
+    <>
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Typography fontWeight={"700"}>{props.title}</Typography>
+
+        {!!props.onClick && (
+          <IconButton onClick={props.onClick}>
+            <CopyAllRounded />
+          </IconButton>
+        )}
+      </Stack>
+      <Divider />
+    </>
+  );
+};
