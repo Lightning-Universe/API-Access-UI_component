@@ -43,7 +43,7 @@ function Main() {
     const update = async () => {
       try {
         const { data } = await axios.get<APIComponentResponse>(
-          `${window.location.origin}/api_metadata.json`
+          `${window.location.href}/api_metadata.json`
         );
         setApiMetadata(data);
       } catch (error) {
