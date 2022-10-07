@@ -208,18 +208,21 @@ const getCodeSnippet = (
 
   if (props.method === "POST") {
     return `import requests
-requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   if (props.method === "PUT") {
     return `import requests
-requests.put("${props.url}", json=${renderStringOrObject(props.request)})
+response = requests.put("${props.url}", json=${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   return `import requests
-requests.get("${props.url}", ${renderStringOrObject(props.request)})
+response = requests.get("${props.url}", ${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
 };
 
