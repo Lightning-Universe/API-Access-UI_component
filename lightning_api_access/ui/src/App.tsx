@@ -197,12 +197,14 @@ const getCodeSnippet = (
   language: Languages = Languages.python
 ) => {
   if (language === Languages.javascript)
-    return `fetch("${props.url}", { body: ${renderStringOrObject(
-      props.request
-    )} })
+    return `fetch("${props.url}",{
+  method:"${props.method}",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(${renderStringOrObject(props.request)})
+})
 .then(res=>res.json())
-.then(data=>{
-  console.log(data);
+.then(async (data) => {
+  console.log(await data);
   // start building cool stuff with data
 })`;
 
