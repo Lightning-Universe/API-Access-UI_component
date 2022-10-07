@@ -209,20 +209,20 @@ const getCodeSnippet = (
   if (props.method === "POST") {
     return `import requests
 response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "content" : "json()"})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   if (props.method === "PUT") {
     return `import requests
 response = requests.put("${props.url}", json=${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "content" : "json()"})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   return `import requests
 response = requests.get("${props.url}", ${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "content" : "json()"})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
 };
 
