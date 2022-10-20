@@ -50,7 +50,7 @@ pip install .
 
 ### Usage
 
-Here's a small [snippet](https://github.com/Lightning-AI/LAI-API-Access-UI-Component/blob/main/examples/example_app.py#L9) of how to use the component in your App.
+Here's a small [snippet](https://github.com/Lightning-AI/LAI-API-Access-UI-Component/blob/main/examples/example_app.py#L9) showing how to use the component in your App:
 
 ```python
 class ServeWork(L.LightningWork):
