@@ -36,7 +36,7 @@ This component allows you to enable users to engage with your app via an API. It
 ### Installation
 
 ```bash
-lightning install component git+https://github.com/Lightning-AI/LAI-API-Access-UI-Component@main
+lightning install component git+https://github.com/Lightning-AI/LAI-API-Access-UI-Component.git@main
 ```
 
 Or to build locally
