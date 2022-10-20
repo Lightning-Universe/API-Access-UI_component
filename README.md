@@ -107,4 +107,6 @@ app = L.LightningApp(ExampleApp())
 
 Once you run the App, you should see the following interface.
 
-![Interface](./assets/api_access.png)
+<div align="center">
+    <img src="./assets/api_access.png" width="400px">
+<div align="center">
