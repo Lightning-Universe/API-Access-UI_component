@@ -28,7 +28,7 @@ ______________________________________________________________________
 
 # API Access Frontend Component
 
-This component allows you to enable users to engage with your app via an API. It is a simple component that allows you to create an UI guide on how to send requests to your App APIs. The component is built with [Lightning's StaticWebFrontend](https://lightning.ai/lightning-docs/api_reference/generated/lightning_app.frontend.web.StaticWebFrontend.html) and [React](https://reactjs.org/) for the interface.
+This component allows you to create a UI guide on how to send requests to your App APIs. The component is built with [Lightning's StaticWebFrontend](https://lightning.ai/lightning-docs/api_reference/generated/lightning_app.frontend.web.StaticWebFrontend.html) and [React](https://reactjs.org/) for the interface.
 
 
 ## Getting Started
