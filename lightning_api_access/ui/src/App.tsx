@@ -26,6 +26,7 @@ type APIEndpoint = Partial<{
   request: any;
   response: object | string;
   input_query: string;
+  snippet: object;
 }>;
 
 enum Languages {
@@ -196,36 +197,13 @@ const getCodeSnippet = (
   props: APIEndpoint,
   language: Languages = Languages.python
 ) => {
-  if (language === Languages.javascript)
-    return `fetch("${props.url}",{
-  method:"${props.method}",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(${renderStringOrObject(props.request)})
-})
-.then(res=>res.json())
-.then(async (data) => {
-  console.log(await data);
-  // start building cool stuff with data
-})`;
-
-  if (props.method === "POST") {
-    return `import requests
-response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "text" : "json()"})
-`;
+  if (language === Languages.javascript) {
+    return `${props.snippet.js}`;
   }
 
-  if (props.method === "PUT") {
-    return `import requests
-response = requests.put("${props.url}", json=${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "text" : "json()"})
-`;
+  if (language === Languages.python) {
+    return `${props.snippet.js}`
   }
-
-  return `import requests
-response = requests.get("${props.url}", ${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "text" : "json()"})
-`;
 };
 
 const renderStringOrObject = (data: object | string = "", indentation = 2) =>
