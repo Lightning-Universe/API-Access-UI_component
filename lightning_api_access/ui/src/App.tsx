@@ -202,7 +202,7 @@ const getCodeSnippet = (
   }
 
   if (language === Languages.python) {
-    return `${props.snippet.js}`
+    return `${props.snippet.js}`;
   }
 };
 
