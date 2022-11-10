@@ -129,7 +129,7 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
           >
             {props.method}
           </Typography>
-          <Typography>Use this to {props.name}</Typography>
+          <Typography>Access {props.name} endpoint programmatically</Typography>
         </Stack>
         <Box height={8} />
         <Box

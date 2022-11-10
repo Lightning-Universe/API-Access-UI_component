@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from lightning.app.frontend import StaticWebFrontend
 
@@ -16,7 +16,7 @@ class APIAccessFrontend(StaticWebFrontend):
 
             def configure_layout(self):
                 return APIAccessFrontend(apis=[{
-					"name":"string",
+                    "name":"string",
                     "url": "endpoint_url",
                     "method": "POST|PUT|GET",
                     "request": "Example request JSON",
@@ -24,7 +24,7 @@ class APIAccessFrontend(StaticWebFrontend):
                 }])
     """
 
-    def __init__(self, apis: Dict[str, Any]) -> None:
+    def __init__(self, apis: List[Dict[str, Any]]) -> None:
         ui_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ui", "build")
         super().__init__(ui_dir)
 

@@ -131,3 +131,5 @@ node_modules
 api_metadata.json
 .lightning
 .DS_Store
+
+.idea/
