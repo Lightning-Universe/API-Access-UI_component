@@ -212,7 +212,7 @@ const getCodeSnippet = (
     return `import requests, PIL.Image as Image, io, base64
 response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
 
-image = Image.open(io.BytesIO(base64.b64decode(response.json()["image"])))
+image = Image.open(io.BytesIO(base64.b64decode(response.json()["image"][22:])))
 image.save("response.png")
 `;
   }
