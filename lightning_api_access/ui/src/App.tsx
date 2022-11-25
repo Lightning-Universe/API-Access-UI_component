@@ -209,9 +209,11 @@ const getCodeSnippet = (
 })`;
 
   if (props.method === "POST") {
-    return `import requests
+    return `import requests, PIL.Image as Image, io, base64
 response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
-print(response.${typeof props.response === "string" ? "text" : "json()"})
+
+image = Image.open(io.BytesIO(base64.b64decode(response.json()["image"])))
+image.save("response.png")
 `;
   }
 
