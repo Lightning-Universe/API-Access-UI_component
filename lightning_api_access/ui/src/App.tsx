@@ -200,7 +200,7 @@ const getCodeSnippet = (
     return `fetch("${props.url}",{
   method:"${props.method}",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(${renderStringOrObject(props.request)})
+  body: JSON.stringify(${renderStringOrObject({text: "Woman painting a large red egg in a dali landscape"})})
 })
 .then(res=>res.json())
 .then(async (data) => {
@@ -210,7 +210,7 @@ const getCodeSnippet = (
 
   if (props.method === "POST") {
     return `import requests, PIL.Image as Image, io, base64
-response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+response = requests.post("${props.url}", json=${renderStringOrObject({text: "Woman painting a large red egg in a dali landscape"})})
 
 image = Image.open(io.BytesIO(base64.b64decode(response.json()["image"][22:])))
 image.save("response.png")

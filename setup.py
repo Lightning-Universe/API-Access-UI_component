@@ -29,7 +29,7 @@ def _load_requirements(
 
 setup(
     name="lightning_api_access",
-    version="0.0.3",
+    version="0.0.4",
     description="⚡ API Access UI ⚡",
     long_description="⚡ Lightning Frontend Showing how a given API can be accessed ⚡",
     author="Lightning et al.",
