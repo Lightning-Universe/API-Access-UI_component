@@ -2,12 +2,18 @@ import json
 import os
 from typing import Any, Dict, List
 
+
 try:
     from lightning.app.frontend import StaticWebFrontend
 except ModuleNotFoundError:
-    raise ModuleNotFoundError(
-        f"Lightning is a required dependency for this component. Please run: pip install lightning"
-    )
+    # TODO properly check module availability
+    try:
+        from lightning_app.frontend import StaticWebFrontend
+    except ModuleNotFoundError:
+
+        raise ModuleNotFoundError(
+            f"Lightning is a required dependency for this component. Please run: pip install lightning"
+        )
 
 
 class APIAccessFrontend(StaticWebFrontend):

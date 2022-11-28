@@ -5,9 +5,7 @@ from typing import List
 from setuptools import find_packages, setup
 
 
-def _load_requirements(
-    path_dir: str, file_name: str = "requirements.txt", comment_char: str = "#"
-) -> List[str]:
+def _load_requirements(path_dir: str, file_name: str = "requirements.txt", comment_char: str = "#") -> List[str]:
     """Load requirements from a file."""
     with open(os.path.join(path_dir, file_name)) as file:
         lines = [ln.strip() for ln in file.readlines()]
@@ -29,7 +27,7 @@ def _load_requirements(
 
 setup(
     name="lightning-api-access",
-    version="0.0.2",
+    version="0.0.3",
     description="⚡ API Access UI ⚡",
     long_description="⚡ Lightning Frontend Showing how a given API can be accessed ⚡",
     author="Lightning et al.",
