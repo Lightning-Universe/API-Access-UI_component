@@ -28,7 +28,7 @@ def _load_requirements(
 
 
 setup(
-    name="lightning_api_access",
+    name="lightning-api-access",
     version="0.0.2",
     description="⚡ API Access UI ⚡",
     long_description="⚡ Lightning Frontend Showing how a given API can be accessed ⚡",
