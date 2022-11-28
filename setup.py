@@ -27,7 +27,7 @@ def _load_requirements(path_dir: str, file_name: str = "requirements.txt", comme
 
 setup(
     name="lightning_api_access",
-    version="0.0.2",
+    version="0.0.3",
     description="⚡ API Access UI ⚡",
     long_description="⚡ Lightning Frontend Showing how a given API can be accessed ⚡",
     author="Lightning et al.",
