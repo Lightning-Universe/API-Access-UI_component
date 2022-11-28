@@ -2,7 +2,12 @@ import json
 import os
 from typing import Any, Dict, List
 
-from lightning.app.frontend import StaticWebFrontend
+try:
+    from lightning.app.frontend import StaticWebFrontend
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        f"Lightning is a required dependency for this component. Please run: pip install lightning"
+    )
 
 
 class APIAccessFrontend(StaticWebFrontend):
@@ -29,7 +34,8 @@ class APIAccessFrontend(StaticWebFrontend):
         super().__init__(ui_dir)
 
         # Write API metadata to a JSON file
-        # Note: This will deliberately be performed each time the `APIAccessFrontend` so that the metadata can change dynamically without issues
+        # Note: This will deliberately be performed each time the `APIAccessFrontend` so that
+        # the metadata can change dynamically without issues
         self.metadata_file = os.path.join(ui_dir, "api_metadata.json")
         with open(self.metadata_file, "w") as f:
             json.dump({"apis": apis}, f)
