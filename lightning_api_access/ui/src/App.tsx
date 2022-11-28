@@ -43,7 +43,7 @@ function Main() {
     const update = async () => {
       try {
         const { data } = await axios.get<APIComponentResponse>(
-          `${window.location.origin}/api_metadata.json`
+          `${window.location.href}/api_metadata.json`
         );
         setApiMetadata(data);
       } catch (error) {
@@ -129,7 +129,7 @@ const RenderApiEndpoint = (props: APIEndpoint) => {
           >
             {props.method}
           </Typography>
-          <Typography>Use this to {props.name}</Typography>
+          <Typography>Access {props.name} endpoint programmatically</Typography>
         </Stack>
         <Box height={8} />
         <Box
@@ -197,29 +197,34 @@ const getCodeSnippet = (
   language: Languages = Languages.python
 ) => {
   if (language === Languages.javascript)
-    return `fetch("${props.url}", { body: ${renderStringOrObject(
-      props.request
-    )} })
+    return `fetch("${props.url}",{
+  method:"${props.method}",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(${renderStringOrObject(props.request)})
+})
 .then(res=>res.json())
-.then(data=>{
-  console.log(data);
+.then(async (data) => {
+  console.log(await data);
   // start building cool stuff with data
 })`;
 
   if (props.method === "POST") {
     return `import requests
-requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+response = requests.post("${props.url}", json=${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   if (props.method === "PUT") {
     return `import requests
-requests.put("${props.url}", json=${renderStringOrObject(props.request)})
+response = requests.put("${props.url}", json=${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
 
   return `import requests
-requests.get("${props.url}", ${renderStringOrObject(props.request)})
+response = requests.get("${props.url}", ${renderStringOrObject(props.request)})
+print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
 };
 

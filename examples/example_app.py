@@ -33,7 +33,7 @@ class ExampleApp(L.LightningFlow):
                     "url": f"{self.serve_work.url}/get_image",
                     "method": "GET",
                     "request": {"id": "string"},
-                    "response": json.dumps({"id": "...", "image": "...", "status": "..."}, indent=2),
+                    "response": "string",
                 },
                 {
                     "name": "list images",
