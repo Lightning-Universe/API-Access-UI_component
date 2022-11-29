@@ -7,6 +7,8 @@ exclude *.json
 
 recursive-include lightning_api_access *
 
+recursive-exclude lightning_api_access/node_modules *
+
 recursive-exclude examples *
 recursive-exclude docs *
 recursive-exclude tests *.py

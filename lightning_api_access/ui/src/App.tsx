@@ -211,8 +211,7 @@ const getCodeSnippet = (
   if (props.method === "POST") {
     return `import requests
 response = requests.post("${props.url}", json=${renderStringOrObject(
-      props.request
-    )})
+      props.request)})
 print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
@@ -220,8 +219,7 @@ print(response.${typeof props.response === "string" ? "text" : "json()"})
   if (props.method === "PUT") {
     return `import requests
 response = requests.put("${props.url}", json=${renderStringOrObject(
-      props.request
-    )})
+      props.request)})
 print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
