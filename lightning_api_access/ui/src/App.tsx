@@ -24,6 +24,7 @@ type APIEndpoint = Partial<{
   url: string;
   method: "GET" | "POST" | "PUT";
   request: any;
+  code_sample: string;
   response: object | string;
   input_query: string;
 }>;
@@ -207,6 +208,8 @@ const getCodeSnippet = (
   console.log(await data);
   // start building cool stuff with data
 })`;
+
+  if (props.code_sample !== undefined) return props.code_sample;
 
   if (props.method === "POST") {
     return `import requests
