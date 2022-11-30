@@ -2,7 +2,6 @@ import json
 import os
 from typing import Any, Dict, List
 
-
 try:
     from lightning.app.frontend import StaticWebFrontend
 except ModuleNotFoundError:
