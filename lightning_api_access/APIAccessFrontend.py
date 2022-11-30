@@ -32,6 +32,7 @@ class APIAccessFrontend(StaticWebFrontend):
                     "method": "POST|PUT|GET",
                     "request": "Example request JSON",
                     "response": "Example response JSON",
+                    "code_sample": "Code sample for the user to run"  # if provided, `request` field will be ignored
                 }])
     """
 
