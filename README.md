@@ -8,8 +8,7 @@
 
 <p align="center" style="color:grey">Enable users to engage with your app via an API</a></p>
 
-______________________________________________________________________
-
+---
 
 <p align="center">
   <a href="#getting-started">Getting Started</a> •
@@ -23,13 +22,11 @@ ______________________________________________________________________
 </div>
 </div>
 
-______________________________________________________________________
-
+---
 
 # API Access Frontend Component
 
 This component allows you to create a UI guide on how to send requests to your App APIs. The component is built with [Lightning's StaticWebFrontend](https://lightning.ai/lightning-docs/api_reference/generated/lightning_app.frontend.web.StaticWebFrontend.html) and [React](https://reactjs.org/) for the interface.
-
 
 ## Getting Started
 
