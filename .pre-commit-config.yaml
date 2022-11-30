@@ -48,7 +48,7 @@ repos:
     rev: v2.7.1
     hooks:
       - id: prettier
-        exclude: lightning_api_access/ui/build
+        exclude: lightning_api_access/ui
         additional_dependencies:
           - prettier@2.7.1
           - typescript@4.4.2
