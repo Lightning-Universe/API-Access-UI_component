@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 try:
     from lightning.app.frontend import StaticWebFrontend
@@ -35,7 +35,7 @@ class APIAccessFrontend(StaticWebFrontend):
                 }])
     """
 
-    def __init__(self, apis: List[Dict[str, Any]]) -> None:
+    def __init__(self, apis: Union[Dict[str, Any], List[Dict[str, Any]]]) -> None:
         ui_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ui", "build")
         super().__init__(ui_dir)
 
