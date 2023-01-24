@@ -18,7 +18,6 @@ jobs:
     uses: Lightning-AI/utilities/.github/workflows/check-schema.yml@v0.4.1
     with:
       azure-dir: ""
-
 # TODO: this package has unresolved dependency on the main lightning package
 #  check-package:
 #    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.4.1
