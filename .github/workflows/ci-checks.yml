@@ -19,16 +19,17 @@ jobs:
     with:
       azure-dir: ""
 
-  check-package:
-    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.4.1
-    with:
-      import-name: "lightning_api_access"
-      pypi-name: "lightning-api-access"
-      strategy-matrix: |
-        {
-          "os": ["ubuntu-20.04", "macos-11", "windows-2022"],
-          "python-version": ["3.8", "3.10"]
-        }
+# TODO: this package has unresolved dependency on the main lightning package
+#  check-package:
+#    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.4.1
+#    with:
+#      import-name: "lightning_api_access"
+#      pypi-name: "lightning-api-access"
+#      strategy-matrix: |
+#        {
+#          "os": ["ubuntu-20.04", "macos-11", "windows-2022"],
+#          "python-version": ["3.8", "3.10"]
+#        }
 
 # TODO: use also this after resolving bug with actions: https://github.com/Lightning-AI/utilities/pull/51
 #  check-docs:
