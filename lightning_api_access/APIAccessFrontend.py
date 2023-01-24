@@ -1,13 +1,17 @@
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from lightning_utilities.core.imports import module_available
 
 if module_available("lightning"):
     from lightning.app.frontend import StaticWebFrontend
-else:
+elif module_available("lightning_app"):
     from lightning_app.frontend import StaticWebFrontend
+else:
+    raise ModuleNotFoundError(
+        "Lightning is a required dependency for this component. Please run `pip install lightning`"
+    )
 
 
 class APIAccessFrontend(StaticWebFrontend):
@@ -26,10 +30,11 @@ class APIAccessFrontend(StaticWebFrontend):
                     "method": "POST|PUT|GET",
                     "request": "Example request JSON",
                     "response": "Example response JSON",
+                    "code_sample": "Code sample for the user to run"  # if provided, `request` field will be ignored
                 }])
     """
 
-    def __init__(self, apis: List[Dict[str, Any]]) -> None:
+    def __init__(self, apis: Union[Dict[str, Any], List[Dict[str, Any]]]) -> None:
         ui_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ui", "build")
         super().__init__(ui_dir)
 

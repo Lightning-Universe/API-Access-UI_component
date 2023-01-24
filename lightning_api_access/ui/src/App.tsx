@@ -24,6 +24,7 @@ type APIEndpoint = Partial<{
   url: string;
   method: "GET" | "POST" | "PUT";
   request: any;
+  code_sample: string;
   response: object | string;
   input_query: string;
 }>;
@@ -208,11 +209,12 @@ const getCodeSnippet = (
   // start building cool stuff with data
 })`;
 
+  if (props.code_sample !== undefined) return props.code_sample;
+
   if (props.method === "POST") {
     return `import requests
 response = requests.post("${props.url}", json=${renderStringOrObject(
-      props.request
-    )})
+      props.request)})
 print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
@@ -220,8 +222,7 @@ print(response.${typeof props.response === "string" ? "text" : "json()"})
   if (props.method === "PUT") {
     return `import requests
 response = requests.put("${props.url}", json=${renderStringOrObject(
-      props.request
-    )})
+      props.request)})
 print(response.${typeof props.response === "string" ? "text" : "json()"})
 `;
   }
